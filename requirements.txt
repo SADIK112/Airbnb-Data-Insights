@@ -1,0 +1,14 @@
+# requirements.txt
+pandas
+numpy  
+scikit-learn
+matplotlib
+seaborn
+xgboost
+fastapi
+uvicorn
+jupyter
+python-dotenv
+requests
+plotly
+joblib

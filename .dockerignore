@@ -1,0 +1,19 @@
+# .dockerignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.csv
+*.pkl
+*.joblib
+.Python
+.pytest_cache/
+.coverage
+.venv/
+venv/
+.git/
+.gitignore
+README.md
+.DS_Store
+*.log
+.env
