@@ -1,0 +1,29 @@
+{
+  "family": "airbnb-ml-models-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID_PLACEHOLDER:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "airbnb-ml-models-container",
+      "image": "PLACEHOLDER_IMAGE",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/airbnb-ml-models",
+          "awslogs-region": "REGION_PLACEHOLDER",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

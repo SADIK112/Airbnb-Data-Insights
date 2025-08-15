@@ -1,7 +1,5 @@
 # .gitignore
-*.csv
 *.pkl
-*.joblib
 
 # Python
 __pycache__/
@@ -11,6 +9,7 @@ __pycache__/
 venv/
 env/
 .env
+*.csv
 
 # Jupyter
 .ipynb_checkpoints/
@@ -25,5 +24,6 @@ logs/
 *.swp
 
 # OS
+*.sh
 .DS_Store
 Thumbs.db
