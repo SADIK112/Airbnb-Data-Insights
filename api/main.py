@@ -52,6 +52,8 @@ async def price_predict(input: PredictionInput):
             "model_name": result['model_name'],
             "model_version": result['model_version'],
             "features_used": result['features_used'],
+            "original_features_shape": result['original_features_shape'],
+            "pca_features_shape": result['pca_features_shape']
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
