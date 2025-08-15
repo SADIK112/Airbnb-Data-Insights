@@ -4,10 +4,10 @@
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "512",
   "memory": "1024",
-  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID_PLACEHOLDER:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::${{ steps.aws-account.outputs.account_id }}:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
-      "name": "airbnb-ml-models-container",
+      "name": "${{ env.CONTAINER_NAME }}",
       "image": "PLACEHOLDER_IMAGE",
       "portMappings": [
         {
@@ -20,7 +20,7 @@
         "logDriver": "awslogs",
         "options": {
           "awslogs-group": "/ecs/airbnb-ml-models",
-          "awslogs-region": "REGION_PLACEHOLDER",
+          "awslogs-region": "${{ env.AWS_REGION }}",
           "awslogs-stream-prefix": "ecs"
         }
       }
