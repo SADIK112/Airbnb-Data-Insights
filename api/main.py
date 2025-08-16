@@ -33,10 +33,15 @@ async def lifespan(app: FastAPI):
     yield
     # Shutdown (cleanup if needed)
 
-
 app = FastAPI(lifespan=lifespan)
 
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 class PredictionInput(BaseModel):
     features: Dict[str, Union[float, int]]
 
@@ -82,11 +87,4 @@ async def health():
 
 
 if __name__ == "__main__":
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
     uvicorn.run(app, host="0.0.0.0", port=8080)
