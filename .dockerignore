@@ -15,4 +15,11 @@ README.md
 .DS_Store
 *.log
 .env
+
+# Frontend
+frontend/
+frontend/node_modules/
+frontend/build/
+frontend/.next/
+frontend/.cache/
 *.sh
