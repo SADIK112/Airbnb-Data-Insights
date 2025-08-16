@@ -6,8 +6,11 @@ from fastapi import HTTPException
 from src.prediction import PricePredictor
 import sys
 import os
+import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
+from fastapi.responses import JSONResponse
 
 # Configure logging
 logging.basicConfig(
@@ -20,6 +23,7 @@ logger = logging.getLogger(__name__)
 # Add parent directory to Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
@@ -29,16 +33,20 @@ async def lifespan(app: FastAPI):
     yield
     # Shutdown (cleanup if needed)
 
+
 app = FastAPI(lifespan=lifespan)
+
 
 class PredictionInput(BaseModel):
     features: Dict[str, Union[float, int]]
+
 
 class PredictionOutput(BaseModel):
     prediction: float
     model_name: str
     model_version: str
     features_used: int
+
 
 @app.post("/price-predict", response_model=PredictionOutput)
 async def price_predict(input: PredictionInput):
@@ -47,21 +55,38 @@ async def price_predict(input: PredictionInput):
         features = input.features
         result = price_predictor.predict(features)
         logger.info("Prediction result: %s", result)
-        return {
-            "prediction": result['prediction'],
-            "model_name": result['model_name'],
-            "model_version": result['model_version'],
-            "features_used": result['features_used'],
-            "original_features_shape": result['original_features_shape'],
-            "pca_features_shape": result['pca_features_shape']
-        }
+        return JSONResponse(
+            content={
+                "prediction": {
+                    "prediction": result["prediction"],
+                    "model_name": result["model_name"],
+                    "model_version": result["model_version"],
+                    "features_used": result["features_used"],
+                    "original_features_shape": result["original_features_shape"],
+                    "pca_features_shape": result["pca_features_shape"],
+                }
+            },
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type",
+            },
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/health")
 async def health():
     return {"status": "ok!"}
 
-if __name__ == '__main__':
-    import uvicorn
-    uvicorn.run(app, host='0.0.0.0', port=8080)
+
+if __name__ == "__main__":
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    uvicorn.run(app, host="0.0.0.0", port=8080)
